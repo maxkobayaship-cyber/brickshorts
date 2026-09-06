@@ -8,14 +8,19 @@ import { LikeButton } from "@/components/like-button";
 import { MuteToggle } from "@/components/mute-toggle";
 import { PauseToggle } from "@/components/pause-toggle";
 import { VideoCard } from "@/components/video-card";
+import { CATALOG_META } from "@/data/catalog";
 import { useLikes } from "@/hooks/use-likes";
-import type { BrickShort } from "@/types/short";
+import type { BrickShort, FeedCategory } from "@/types/short";
+
+const WINDOW = 2;
 
 type VideoFeedProps = {
   shorts: BrickShort[];
+  category: FeedCategory;
+  onCategoryChange: (next: FeedCategory) => void;
 };
 
-export function VideoFeed({ shorts }: VideoFeedProps) {
+export function VideoFeed({ shorts, category, onCategoryChange }: VideoFeedProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const indexRef = useRef(0);
   const [index, setIndex] = useState(0);
@@ -25,6 +30,7 @@ export function VideoFeed({ shorts }: VideoFeedProps) {
 
   const current = shorts[index];
   const likes = useLikes(current?.id ?? "none", current?.likes ?? 0);
+  const meta = CATALOG_META[category];
 
   const goTo = useCallback(
     (next: number) => {
@@ -43,6 +49,14 @@ export function VideoFeed({ shorts }: VideoFeedProps) {
     },
     [shorts.length],
   );
+
+  useEffect(() => {
+    indexRef.current = 0;
+    setIndex(0);
+    setPaused(false);
+    setHintVisible(true);
+    scrollerRef.current?.scrollTo({ top: 0 });
+  }, [category]);
 
   useEffect(() => {
     document.documentElement.dataset.brickshorts = "ready";
@@ -92,7 +106,7 @@ export function VideoFeed({ shorts }: VideoFeedProps) {
   if (shorts.length === 0) {
     return (
       <div className="relative h-full w-full bg-[#120c07]">
-        <FeedHeader />
+        <FeedHeader category={category} onCategoryChange={onCategoryChange} />
         <EmptyFeed />
       </div>
     );
@@ -100,7 +114,7 @@ export function VideoFeed({ shorts }: VideoFeedProps) {
 
   return (
     <div className="relative h-full w-full bg-black" data-testid="brickshorts-feed">
-      <FeedHeader />
+      <FeedHeader category={category} onCategoryChange={onCategoryChange} />
       <div
         ref={scrollerRef}
         data-testid="feed-scroller"
@@ -117,21 +131,30 @@ export function VideoFeed({ shorts }: VideoFeedProps) {
         }}
       >
         {shorts.map((short, cardIndex) => (
-          <section key={short.id} className="feed-slide w-full">
-            <VideoCard
-              short={short}
-              active={cardIndex === index}
-              muted={muted}
-              paused={paused}
-              onTogglePause={() => setPaused((value) => !value)}
-              showHint={hintVisible && cardIndex === 0}
-            />
+          <section key={`${category}-${short.id}`} className="feed-slide w-full">
+            {Math.abs(cardIndex - index) <= WINDOW ? (
+              <VideoCard
+                short={short}
+                active={cardIndex === index}
+                muted={muted}
+                paused={paused}
+                onTogglePause={() => setPaused((value) => !value)}
+                showHint={hintVisible && cardIndex === 0}
+              />
+            ) : (
+              <div className="h-full w-full bg-black" aria-hidden />
+            )}
           </section>
         ))}
       </div>
 
       <p className="pointer-events-none absolute top-[max(4.6rem,calc(env(safe-area-inset-top)+3.4rem))] right-4 z-30 text-[11px] font-semibold tracking-wide text-white/80 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
         {index + 1}/{shorts.length}
+        {meta.rotated > 0 ? (
+          <span className="mt-0.5 block text-[10px] font-medium text-white/55">
+            {meta.uniqueSources} únicos
+          </span>
+        ) : null}
       </p>
 
       <div className="absolute right-3 bottom-28 z-30 flex flex-col items-center gap-4">

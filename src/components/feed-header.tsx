@@ -1,20 +1,33 @@
-export function FeedHeader() {
+import { CategorySwitch } from "@/components/category-switch";
+import type { FeedCategory } from "@/types/short";
+
+type FeedHeaderProps = {
+  category: FeedCategory;
+  onCategoryChange: (next: FeedCategory) => void;
+};
+
+const COPY: Record<FeedCategory, { title: string; subtitle: string }> = {
+  lego: { title: "BrickShorts", subtitle: "clips de tijolos" },
+  celular: { title: "BrickShorts", subtitle: "montando celular" },
+};
+
+export function FeedHeader({ category, onCategoryChange }: FeedHeaderProps) {
+  const copy = COPY[category];
+
   return (
-    <header className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between px-4 pt-[max(0.9rem,env(safe-area-inset-top))]">
+    <header className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-3 px-4 pt-[max(0.9rem,env(safe-area-inset-top))]">
       <div className="flex items-center gap-2.5">
         <StudMark />
         <div className="leading-tight">
           <p className="font-heading text-[1.35rem] font-semibold tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.65)]">
-            BrickShorts
+            {copy.title}
           </p>
           <p className="text-[11px] font-medium tracking-wide text-white/75">
-            clips de tijolos
+            {copy.subtitle}
           </p>
         </div>
       </div>
-      <span className="rounded-full bg-black/35 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-200 ring-1 ring-white/15 backdrop-blur-md">
-        Para ti
-      </span>
+      <CategorySwitch value={category} onChange={onCategoryChange} />
     </header>
   );
 }
