@@ -1,4 +1,4 @@
-# BrickShorts
+# MaxShorts
 
 Dois feeds verticais estilo Shorts: **Tijolos** (brickfilms e construções) e **Celular** (montar / desmontar / reparar telemóvel). Sem conta e sem API do YouTube.
 
@@ -46,7 +46,7 @@ A few cropped demo MP4s remain in `/public/videos` for offline checks. The live 
 - Next.js App Router, TypeScript, Tailwind CSS
 - shadcn/ui for primitives
 
-BrickShorts is an independent fan project. It is not affiliated with the LEGO Group and does not use official trademarks or logos.
+MaxShorts is an independent fan project. It is not affiliated with the LEGO Group and does not use official trademarks or logos.
 
 ## Deploy
 

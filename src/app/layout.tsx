@@ -13,10 +13,10 @@ const fredoka = Fredoka({
 });
 
 export const metadata: Metadata = {
-  title: "BrickShorts — tijolos e celular",
+  title: "MaxShorts — tijolos e celular",
   description:
-    "Dois feeds verticais: construções de tijolo e montagem de telemóvel. Estilo Shorts, sem conta.",
-  applicationName: "BrickShorts",
+    "MaxShorts: dois feeds verticais de construções de tijolo e montagem de telemóvel. Estilo Shorts, sem conta.",
+  applicationName: "MaxShorts",
 };
 
 export const viewport: Viewport = {

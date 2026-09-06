@@ -1,11 +1,11 @@
 # Catalog notes
 
-BrickShorts now has two swipe feeds of **200 items each**. Clips stream from remote CC/public URLs. This repo does **not** commit hundreds of MP4s.
+MaxShorts now has two swipe feeds of **200 items each**. Clips stream from remote CC/public URLs. This repo does **not** commit hundreds of MP4s.
 
 ## Counts
 
 | Feed | Slots | Unique remote files | Rotated reprises |
-| --- | ---: | ---: | ---: |
+| --- | ---: | ---: | --- |
 | Tijolos (`lego`) | 200 | 200 | 0 |
 | Celular (`celular`) | 200 | 116 | 84 |
 
