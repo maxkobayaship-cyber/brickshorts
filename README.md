@@ -28,12 +28,12 @@ On a phone the feed is full-screen. On desktop it sits in a phone-width frame.
 
 ## Catalogs
 
-Each feed has **200** slots. Videos stream from Wikimedia Commons and the Internet Archive (CC or public library streams). Hundreds of MP4s are **not** committed here.
+Each feed has **200** slots. Tijolos streams Commons + Archive brickfilms. Celular streams only short Wikimedia Commons clips (the same CDN as the working LEGO tab). Hundreds of MP4s are **not** committed here.
 
 | Feed | Items | Unique remote files | Notes |
 | --- | ---: | ---: | --- |
 | Tijolos | 200 | 200 | Brickfilms + Commons LEGO clips |
-| Celular | 200 | 116 | Service/teardown/production; 84 honest reprises |
+| Celular | 200 | 15 | Short Commons factory/repair clips; 185 honest reprises |
 
 See [CATALOG.md](CATALOG.md) for sources and the rotation rule.
 

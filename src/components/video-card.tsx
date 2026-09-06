@@ -27,7 +27,13 @@ export function VideoCard({
 }: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
+  const retriesRef = useRef(0);
   const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    retriesRef.current = 0;
+    setFailed(false);
+  }, [short.src]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -96,13 +102,21 @@ export function VideoCard({
           playsInline
           loop
           muted
-          preload={active ? "auto" : "metadata"}
+          preload={active ? "auto" : "none"}
           onCanPlay={() => {
             const video = videoRef.current;
             if (!video || !active || paused || failed) return;
             playActiveClip(video, muted);
           }}
-          onError={() => setFailed(true)}
+          onError={() => {
+            const video = videoRef.current;
+            if (video && retriesRef.current < 1) {
+              retriesRef.current += 1;
+              video.load();
+              return;
+            }
+            setFailed(true);
+          }}
           aria-label={`Clipe de @${short.creator}`}
         />
       ) : (

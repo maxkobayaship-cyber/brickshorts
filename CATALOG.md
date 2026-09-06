@@ -5,11 +5,11 @@ MaxShorts now has two swipe feeds of **200 items each**. Clips stream from remot
 ## Counts
 
 | Feed | Slots | Unique remote files | Rotated reprises |
-| --- | ---: | ---: | --- |
+| --- | ---: | ---: | ---: |
 | Tijolos (`lego`) | 200 | 200 | 0 |
-| Celular (`celular`) | 200 | 116 | 84 |
+| Celular (`celular`) | 200 | 15 | 185 |
 
-Reprises keep the same `src` and add `· reprise N` on the caption plus a distinct `id` (`…-r1`). The counter shows “116 únicos” on the Celular feed.
+Reprises keep the same `src` and add `· reprise N` on the caption plus a distinct `id` (`…-r1`). The counter shows “15 únicos” on the Celular feed.
 
 ## Tijolos sources
 
@@ -20,16 +20,16 @@ There were more than 200 unique brickfilms; the feed uses the first 200 after Co
 
 ## Celular sources
 
-Public, streamable assembly / repair / teardown files — not news, ads, or game trailers:
+The first catalog used Internet Archive service dumps (`archive.org/download/…` → `*.archive.org` CDNs). Those files often return HTTP 200 but **fail in mobile browsers** (redirect + `moov` at the end + long Range stalls), so the tab opened on “Este clipe não carregou”.
 
-- Samsung service disassembly set (`svc01_vids`)
-- Nokia official disassembly set (`nokia-n-93-disassembly-lower-block`)
-- Apple Internal iPhone repair clips (4/4S, X battery/camera/open, 7–13 / SE service videos)
-- Individual IA teardowns (Note 4, Z Flip, iPhone screen/board repair)
-- Commons: Gigaset smartphone production line, phone-repairer clips, screen-protector how-to
+Celular now uses only **short Wikimedia Commons** clips on `upload.wikimedia.org` — the same CDN that already plays the Tijolos feed:
 
-A wide Commons/Archive search for “phone” is mostly apps, news, and Foxconn politics. Honest unique hardware-assembly files in the public commons sit around **116**. The remaining 84 slots rotate those files.
+- Gigaset smartphone production (screws, mainboard, QA, label)
+- Gigaset factory line (SMD, mould, conveyor)
+- Phone-repairer benches, screen-protector how-to, PinePhone unbox, Terra X internals, iPhone lens 3D
+
+Large originals are swapped for Commons **360p/240p** transcodes (a few MB). There are **15** unique playable files; the other 185 slots are honest reprises. Internet Archive dumps are no longer in this feed.
 
 ## Playback
 
-`<video src>` points at `upload.wikimedia.org` or `archive.org/download/…`. No YouTube API. The feed only mounts a ±2 window of players so 200 remote files do not all load at once.
+`<video src>` points at `upload.wikimedia.org`. No YouTube API. The feed only mounts a ±2 window of players so 200 remote files do not all load at once.
