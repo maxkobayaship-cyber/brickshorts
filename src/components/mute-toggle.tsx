@@ -12,6 +12,8 @@ export function MuteToggle({ muted, onToggle }: MuteToggleProps) {
     <button
       type="button"
       data-testid="mute-toggle"
+      data-muted={muted ? "true" : "false"}
+      onPointerDown={(event) => event.stopPropagation()}
       onClick={onToggle}
       aria-pressed={!muted}
       aria-label={muted ? "Ativar som" : "Desativar som"}
