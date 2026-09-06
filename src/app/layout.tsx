@@ -13,9 +13,9 @@ const fredoka = Fredoka({
 });
 
 export const metadata: Metadata = {
-  title: "BrickShorts — clips de tijolos",
+  title: "BrickShorts — tijolos e celular",
   description:
-    "Feed vertical de vídeos curtos de construções, Technic, stop-motion e MOCs. Estilo Shorts, só tijolos.",
+    "Dois feeds verticais: construções de tijolo e montagem de telemóvel. Estilo Shorts, sem conta.",
   applicationName: "BrickShorts",
 };
 
