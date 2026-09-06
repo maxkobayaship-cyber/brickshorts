@@ -1,0 +1,39 @@
+import type { Metadata, Viewport } from "next";
+import { Fredoka, Nunito } from "next/font/google";
+import "./globals.css";
+
+const nunito = Nunito({
+  variable: "--font-nunito",
+  subsets: ["latin", "latin-ext"],
+});
+
+const fredoka = Fredoka({
+  variable: "--font-fredoka",
+  subsets: ["latin", "latin-ext"],
+});
+
+export const metadata: Metadata = {
+  title: "BrickShorts — clips de tijolos",
+  description:
+    "Feed vertical de vídeos curtos de construções, Technic, stop-motion e MOCs. Estilo Shorts, só tijolos.",
+  applicationName: "BrickShorts",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
+  themeColor: "#120c07",
+};
+
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  return (
+    <html
+      lang="pt"
+      className={`${nunito.variable} ${fredoka.variable} dark h-full antialiased`}
+    >
+      <body className="min-h-full bg-[#120c07] text-white">{children}</body>
+    </html>
+  );
+}
