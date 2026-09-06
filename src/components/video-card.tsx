@@ -3,6 +3,7 @@
 import { RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { applyVideoMute, playActiveClip, silenceClip } from "@/lib/audio";
 import type { BrickShort } from "@/types/short";
 
 type VideoCardProps = {
@@ -11,6 +12,7 @@ type VideoCardProps = {
   muted: boolean;
   paused: boolean;
   onTogglePause: () => void;
+  onVideoElement?: (video: HTMLVideoElement | null) => void;
   showHint?: boolean;
 };
 
@@ -20,6 +22,7 @@ export function VideoCard({
   muted,
   paused,
   onTogglePause,
+  onVideoElement,
   showHint = false,
 }: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -28,15 +31,31 @@ export function VideoCard({
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
-    video.muted = muted;
+    onVideoElement?.(active ? video : null);
+    return () => {
+      if (active) onVideoElement?.(null);
+    };
+  }, [active, onVideoElement, short.id]);
 
-    if (active && !failed && !paused) {
-      void video.play().catch(() => {});
-    } else {
-      video.pause();
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (!active) {
+      silenceClip(video);
+      return;
     }
-  }, [active, failed, muted, paused]);
+
+    if (failed) return;
+
+    if (paused) {
+      applyVideoMute(video, true);
+      video.pause();
+      return;
+    }
+
+    playActiveClip(video, muted);
+  }, [active, failed, muted, paused, short.src]);
 
   function onPointerDown(event: React.PointerEvent<HTMLElement>) {
     pointerStart.current = { x: event.clientX, y: event.clientY };
@@ -57,7 +76,7 @@ export function VideoCard({
     if (!video) return;
     video.load();
     if (active && !paused) {
-      void video.play().catch(() => {});
+      playActiveClip(video, muted);
     }
   }
 
@@ -65,6 +84,7 @@ export function VideoCard({
     <article
       className="relative h-full w-full overflow-hidden bg-black"
       data-active={active ? "true" : "false"}
+      data-audio={active && !muted ? "on" : "off"}
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
     >
@@ -75,8 +95,13 @@ export function VideoCard({
           src={short.src}
           playsInline
           loop
-          muted={muted}
+          muted
           preload={active ? "auto" : "metadata"}
+          onCanPlay={() => {
+            const video = videoRef.current;
+            if (!video || !active || paused || failed) return;
+            playActiveClip(video, muted);
+          }}
           onError={() => setFailed(true)}
           aria-label={`Clipe de @${short.creator}`}
         />

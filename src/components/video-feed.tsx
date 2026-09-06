@@ -10,6 +10,7 @@ import { PauseToggle } from "@/components/pause-toggle";
 import { VideoCard } from "@/components/video-card";
 import { CATALOG_META } from "@/data/catalog";
 import { useLikes } from "@/hooks/use-likes";
+import { playActiveClip } from "@/lib/audio";
 import type { BrickShort, FeedCategory } from "@/types/short";
 
 const WINDOW = 2;
@@ -23,10 +24,25 @@ type VideoFeedProps = {
 export function VideoFeed({ shorts, category, onCategoryChange }: VideoFeedProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const indexRef = useRef(0);
+  const mutedRef = useRef(true);
+  const activeVideoRef = useRef<HTMLVideoElement | null>(null);
   const [index, setIndex] = useState(0);
   const [muted, setMuted] = useState(true);
   const [paused, setPaused] = useState(false);
   const [hintVisible, setHintVisible] = useState(true);
+
+  const setActiveVideo = useCallback((video: HTMLVideoElement | null) => {
+    activeVideoRef.current = video;
+    if (video) {
+      playActiveClip(video, mutedRef.current);
+    }
+  }, []);
+
+  const applyMutePreference = useCallback((nextMuted: boolean) => {
+    mutedRef.current = nextMuted;
+    setMuted(nextMuted);
+    playActiveClip(activeVideoRef.current, nextMuted);
+  }, []);
 
   const current = shorts[index];
   const likes = useLikes(current?.id ?? "none", current?.likes ?? 0);
@@ -45,6 +61,9 @@ export function VideoFeed({ shorts, category, onCategoryChange }: VideoFeedProps
       scroller.scrollTo({
         top: clamped * scroller.clientHeight,
         behavior: "smooth",
+      });
+      requestAnimationFrame(() => {
+        playActiveClip(activeVideoRef.current, mutedRef.current);
       });
     },
     [shorts.length],
@@ -78,7 +97,8 @@ export function VideoFeed({ shorts, category, onCategoryChange }: VideoFeedProps
         event.preventDefault();
         goTo(indexRef.current - 1);
       } else if (event.key === "m") {
-        setMuted((value) => !value);
+        event.preventDefault();
+        applyMutePreference(!mutedRef.current);
       } else if (event.key === " ") {
         event.preventDefault();
         setPaused((value) => !value);
@@ -101,7 +121,7 @@ export function VideoFeed({ shorts, category, onCategoryChange }: VideoFeedProps
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("wheel", onWheel);
     };
-  }, [goTo]);
+  }, [applyMutePreference, goTo]);
 
   if (shorts.length === 0) {
     return (
@@ -113,7 +133,11 @@ export function VideoFeed({ shorts, category, onCategoryChange }: VideoFeedProps
   }
 
   return (
-    <div className="relative h-full w-full bg-black" data-testid="brickshorts-feed">
+    <div
+      className="relative h-full w-full bg-black"
+      data-testid="brickshorts-feed"
+      data-muted={muted ? "true" : "false"}
+    >
       <FeedHeader category={category} onCategoryChange={onCategoryChange} />
       <div
         ref={scrollerRef}
@@ -139,6 +163,7 @@ export function VideoFeed({ shorts, category, onCategoryChange }: VideoFeedProps
                 muted={muted}
                 paused={paused}
                 onTogglePause={() => setPaused((value) => !value)}
+                onVideoElement={cardIndex === index ? setActiveVideo : undefined}
                 showHint={hintVisible && cardIndex === 0}
               />
             ) : (
@@ -159,7 +184,10 @@ export function VideoFeed({ shorts, category, onCategoryChange }: VideoFeedProps
 
       <div className="absolute right-3 bottom-28 z-30 flex flex-col items-center gap-4">
         <LikeButton liked={likes.liked} count={likes.count} onToggle={likes.toggle} />
-        <MuteToggle muted={muted} onToggle={() => setMuted((value) => !value)} />
+        <MuteToggle
+          muted={muted}
+          onToggle={() => applyMutePreference(!mutedRef.current)}
+        />
         <PauseToggle paused={paused} onToggle={() => setPaused((value) => !value)} />
       </div>
 
