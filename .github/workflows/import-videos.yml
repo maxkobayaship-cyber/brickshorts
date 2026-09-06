@@ -13,16 +13,29 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Download seeded MP4s
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Download and transcode Commons clips
+        env:
+          UA: "BrickShorts/1.0 (https://github.com/maxkobayaship-cyber/brickshorts; educational reuse of CC media)"
         run: |
           set -euo pipefail
           mkdir -p public/videos
-          BASE="https://temporary-speedy-coral-nfa0qq2.vercel.app/videos"
-          for f in antikythera cologne portrait projector saturn-v steam-engine technic-expo walking-robot; do
-            echo "fetch $f"
-            curl -fL --retry 4 --retry-delay 2 "$BASE/$f.mp4" -o "public/videos/$f.mp4"
-            test -s "public/videos/$f.mp4"
-          done
+          download() {
+            local name="$1" src="$2"
+            echo "fetch $name"
+            curl -fL --retry 5 --retry-delay 3 -A "$UA" "$src" -o "/tmp/$name.src"
+            ffmpeg -y -i "/tmp/$name.src" -an -t 20 -vf "scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280" -c:v libx264 -preset veryfast -crf 28 -movflags +faststart "public/videos/$name.mp4"
+            rm -f "/tmp/$name.src"
+          }
+          download saturn-v "https://upload.wikimedia.org/wikipedia/commons/8/81/Building_the_Lego_Saturn_V.webm"
+          download steam-engine "https://upload.wikimedia.org/wikipedia/commons/d/da/Machine_%C3%A0_vapeur_LEGO_bicylindre%3B_Steam_machine_LEGO_twin-cylinder.webm"
+          download antikythera "https://upload.wikimedia.org/wikipedia/commons/c/c5/Lego_Antikythera_Mechanism.webm"
+          download walking-robot "https://upload.wikimedia.org/wikipedia/commons/b/b2/Simple_Walking_Lego_Robot.ogv"
+          download projector "https://upload.wikimedia.org/wikipedia/commons/b/be/Projecteur_LEGO%2C_fonctionnement.webm"
+          download cologne "https://upload.wikimedia.org/wikipedia/commons/6/68/Cath%C3%A9drale_de_Cologne_en_Lego_%28Rosheim%29.ogv"
+          download portrait "https://upload.wikimedia.org/wikipedia/commons/b/b2/Portrait_en_Lego_%28Rosheim%29.ogv"
+          download technic-expo "https://upload.wikimedia.org/wikipedia/commons/7/70/Lego_Technic_at_Exhibition_in_Pozna%C5%84_2014.webm"
           ls -la public/videos
       - name: Commit videos
         run: |
