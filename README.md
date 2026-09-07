@@ -1,6 +1,6 @@
 # MaxShorts
 
-Três feeds verticais estilo Shorts: **Tijolos** (brickfilms e construções), **Celular** (montar / desmontar / reparar telemóvel) e **Produtos** (lançamentos de gadgets, unbox e demos). Sem conta e sem API do YouTube.
+Três feeds verticais estilo Shorts: **Tijolos** (brickfilms e construções), **Celular** (montar / desmontar / reparar celular) e **Produtos** (lançamentos de gadgets, unbox e demos). Interface em português do Brasil. Sem conta e sem API do YouTube.
 
 ## Run locally
 
@@ -16,31 +16,33 @@ Production preview (same port):
 npm run build && npm run start
 ```
 
-On a phone the feed is full-screen. On desktop it sits in a phone-width frame.
+On a phone the feed is full-screen. On desktop it sits in a phone-width frame, with **Tela cheia** (Fullscreen API) in the corner.
 
 ## What you can do
 
 - Switch **Tijolos** / **Celular** / **Produtos** in the header
-- Swipe or scroll to snap between clips (arrow keys / `j` `k`; wheel on desktop)
-- Tap a clip or the pause control to pause/resume (`space`)
-- Toggle sound (`m`) — mute preference stays when you change tabs
+- Mobile: **Arrasta pra cima**. Desktop: `↑` `↓` / espaço / `M` (also `j` `k` and the side chevrons)
+- Tap a clip or the pause control to pause/resume
+- Toggle sound (`m`) — first load is always muted. Unmute is a user gesture. Switching tabs remutes so the next feed never surprise-blasts audio. Header shows **Som ligado** when unmuted.
 - Like a clip — counts persist in `localStorage` on this device
 
 ## Catalogs
 
-Each feed has **200** slots. Tijolos streams Commons + Archive brickfilms. Celular and Produtos stream only short Wikimedia Commons clips on `upload.wikimedia.org` (the CDN that already plays on phones). Hundreds of MP4s are **not** committed here.
+Feeds are **deduped** by clip `id` / normalized `src` (and caption+@). The counter is `atual/total` after that unique list. Each tab visit shuffles the start.
 
-| Feed | Items | Unique remote files | Notes |
-| --- | ---: | ---: | --- |
-| Tijolos | 200 | 200 | Brickfilms + Commons LEGO clips |
-| Celular | 200 | 15 | Short Commons factory/repair clips; 185 honest reprises |
-| Produtos | 200 | 38 | Commons unbox / launch / CES-style demos; 162 honest reprises |
+Celular and Produtos stream compact Wikimedia Commons clips on `upload.wikimedia.org` (240p VP9, typically well under 3 MB). Commons H.264 `360p.mpeg4.mov` transcodes are often far larger than 3 MB, so we keep the phone-friendly 240p files. Tijolos streams Commons + Archive brickfilms.
 
-See [CATALOG.md](CATALOG.md) for sources and the rotation rule.
+| Feed | Unique clips | Notes |
+| --- | ---: | --- |
+| Tijolos | 200 | Brickfilms + Commons LEGO clips |
+| Celular | 15 | Short Commons factory/repair clips |
+| Produtos | 38 | Commons unbox / launch / CES-style demos |
 
-The scroller virtualizes players: only the current clip and two neighbours mount a `<video>`.
+See [CATALOG.md](CATALOG.md) for sources.
 
-A few cropped demo MP4s remain in `/public/videos` for offline checks. The live feeds use remote URLs in `src/data/lego.ts`, `src/data/celular.ts`, and `src/data/tech.ts`.
+Only the active clip and a small window (`±1`, plus `+2` in the scroll direction) mount a `<video>`. Everyone else is poster-only so Safari does not hit its ~16 player limit.
+
+Failed clips retry `video.load()` once, then go to sessionStorage `maxshorts-bad` and auto-skip with “Clipe falhou, pulando…”. A stall of 8s shows **Clipe indisponível** with **Pular** / **Tentar de novo**.
 
 ## Stack
 
@@ -58,4 +60,4 @@ No env vars required.
 
 ## Out of scope (for now)
 
-Accounts, uploads, YouTube API keys, comments, search, and recommendations.
+Accounts, uploads, YouTube API keys, comments, search, recommendations, ML, and PWA.

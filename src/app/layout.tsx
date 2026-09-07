@@ -15,7 +15,7 @@ const fredoka = Fredoka({
 export const metadata: Metadata = {
   title: "MaxShorts — tijolos, celular e produtos",
   description:
-    "MaxShorts: três feeds verticais de tijolos, montagem de telemóvel e lançamentos de gadgets. Estilo Shorts, sem conta.",
+    "MaxShorts: três feeds verticais de tijolos, montagem de celular e lançamentos de gadgets. Estilo Shorts, sem conta.",
   applicationName: "MaxShorts",
 };
 
@@ -30,7 +30,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="pt"
+      lang="pt-BR"
       className={`${nunito.variable} ${fredoka.variable} dark h-full antialiased`}
     >
       <body className="min-h-full bg-[#120c07] text-white">{children}</body>

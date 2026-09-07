@@ -1,28 +1,38 @@
-import { CELULAR_SHORTS, CELULAR_UNIQUE_COUNT } from "@/data/celular";
+import { CELULAR_SHORTS } from "@/data/celular";
 import { LEGO_SHORTS } from "@/data/lego";
-import { TECH_SHORTS, TECH_UNIQUE_COUNT } from "@/data/tech";
+import { TECH_SHORTS } from "@/data/tech";
+import { withPlaybackMedia } from "@/lib/media";
+import { uniqueByClip } from "@/lib/shuffle";
 import type { BrickShort, FeedCategory } from "@/types/short";
 
+function prepare(items: BrickShort[], compact: boolean): BrickShort[] {
+  return uniqueByClip(items.map((item) => withPlaybackMedia(item, compact)));
+}
+
 export const FEEDS: Record<FeedCategory, BrickShort[]> = {
-  lego: LEGO_SHORTS,
-  celular: CELULAR_SHORTS,
-  tech: TECH_SHORTS,
+  lego: prepare(LEGO_SHORTS, false),
+  celular: prepare(CELULAR_SHORTS, true),
+  tech: prepare(TECH_SHORTS, true),
 };
 
-/** Honest unique-source counts. Celular and Tech rotate short Commons clips that play on phones. */
+/** Post-dedupe counts. Counter UI is atual/total from the prepared feed. */
 export const CATALOG_META: Record<
   FeedCategory,
   { feedItems: number; uniqueSources: number; rotated: number }
 > = {
-  lego: { feedItems: LEGO_SHORTS.length, uniqueSources: 200, rotated: 0 },
+  lego: {
+    feedItems: FEEDS.lego.length,
+    uniqueSources: FEEDS.lego.length,
+    rotated: 0,
+  },
   celular: {
-    feedItems: CELULAR_SHORTS.length,
-    uniqueSources: CELULAR_UNIQUE_COUNT,
-    rotated: CELULAR_SHORTS.length - CELULAR_UNIQUE_COUNT,
+    feedItems: FEEDS.celular.length,
+    uniqueSources: FEEDS.celular.length,
+    rotated: 0,
   },
   tech: {
-    feedItems: TECH_SHORTS.length,
-    uniqueSources: TECH_UNIQUE_COUNT,
-    rotated: TECH_SHORTS.length - TECH_UNIQUE_COUNT,
+    feedItems: FEEDS.tech.length,
+    uniqueSources: FEEDS.tech.length,
+    rotated: 0,
   },
 };

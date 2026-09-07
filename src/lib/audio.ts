@@ -9,25 +9,15 @@ export function applyVideoMute(video: HTMLVideoElement | null, muted: boolean) {
 }
 
 /**
- * Play the active clip. Unmute must happen in a user-gesture stack when
- * possible; if the browser blocks unmuted autoplay, keep the picture and
- * retry unmuted after a muted start.
+ * Play the active clip. Unmute only when the caller already received a
+ * user gesture (`muted === false`). Never retry-unmute after a muted start.
  */
 export function playActiveClip(video: HTMLVideoElement | null, muted: boolean) {
   if (!video) return;
   applyVideoMute(video, muted);
-
-  const attempt = video.play();
-  void attempt.then(() => {
-    if (!muted) {
-      applyVideoMute(video, false);
-    }
-  }).catch(() => {
-    if (muted) return;
+  void video.play().catch(() => {
     applyVideoMute(video, true);
-    void video.play().then(() => {
-      applyVideoMute(video, false);
-    }).catch(() => {});
+    void video.play().catch(() => {});
   });
 }
 
@@ -35,4 +25,23 @@ export function silenceClip(video: HTMLVideoElement | null) {
   if (!video) return;
   applyVideoMute(video, true);
   video.pause();
+}
+
+export function silenceAllVideos(root?: ParentNode | Document | null) {
+  const scope = root ?? (typeof document === "undefined" ? null : document);
+  if (!scope) return;
+  scope.querySelectorAll("video").forEach((video) => {
+    silenceClip(video);
+  });
+}
+
+export function detachClip(video: HTMLVideoElement | null) {
+  if (!video) return;
+  silenceClip(video);
+  video.removeAttribute("src");
+  try {
+    video.load();
+  } catch {
+    // Safari can throw if the element is already tearing down.
+  }
 }
