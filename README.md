@@ -21,7 +21,7 @@ On a phone the feed is full-screen. On desktop it sits in a phone-width frame, w
 ## What you can do
 
 - Switch **Tijolos** / **Celular** / **Produtos** in the header
-- Mobile: **Arrasta pra cima**. Desktop: `↑` `↓` / espaço / `M` (also `j` `k` and the side chevrons)
+- Mobile: **Arrasta pra cima**. Desktop: the same gesture chip plus `↑` `↓` / espaço / `M` (also `j` `k` and the side chevrons)
 - Tap a clip or the pause control to pause/resume
 - Toggle sound (`m`) — first load is always muted. Unmute is a user gesture. Switching tabs remutes so the next feed never surprise-blasts audio. Header shows **Som ligado** when unmuted.
 - Like a clip — counts persist in `localStorage` on this device

@@ -260,14 +260,20 @@ export function VideoCard({
       ) : null}
 
       {showHint && active && phase !== "error" ? (
-        <>
-          <p className="pointer-events-none absolute top-[22%] left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/35 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-white/90 ring-1 ring-white/10 backdrop-blur-md md:hidden">
+        <div className="pointer-events-none absolute top-[22%] left-1/2 z-10 flex w-max max-w-[22rem] -translate-x-1/2 flex-col items-center gap-1.5">
+          <p
+            data-testid="hint-gesture"
+            className="rounded-full bg-black/35 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-white/90 ring-1 ring-white/10 backdrop-blur-md"
+          >
             {copy.hintMobile}
           </p>
-          <p className="pointer-events-none absolute top-[22%] left-1/2 z-10 hidden max-w-[22rem] -translate-x-1/2 rounded-full bg-black/35 px-3 py-1.5 text-center text-[11px] font-semibold tracking-wide text-white/90 ring-1 ring-white/10 backdrop-blur-md md:block">
+          <p
+            data-testid="hint-desktop"
+            className="hidden rounded-full bg-black/35 px-3 py-1.5 text-center text-[11px] font-semibold tracking-wide text-white/90 ring-1 ring-white/10 backdrop-blur-md md:block"
+          >
             {copy.hintDesktop}
           </p>
-        </>
+        </div>
       ) : null}
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pr-20">
