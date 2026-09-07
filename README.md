@@ -1,6 +1,6 @@
 # MaxShorts
 
-Dois feeds verticais estilo Shorts: **Tijolos** (brickfilms e construções) e **Celular** (montar / desmontar / reparar telemóvel). Sem conta e sem API do YouTube.
+Três feeds verticais estilo Shorts: **Tijolos** (brickfilms e construções), **Celular** (montar / desmontar / reparar telemóvel) e **Produtos** (lançamentos de gadgets, unbox e demos). Sem conta e sem API do YouTube.
 
 ## Run locally
 
@@ -20,26 +20,27 @@ On a phone the feed is full-screen. On desktop it sits in a phone-width frame.
 
 ## What you can do
 
-- Switch **Tijolos** / **Celular** in the header
+- Switch **Tijolos** / **Celular** / **Produtos** in the header
 - Swipe or scroll to snap between clips (arrow keys / `j` `k`; wheel on desktop)
 - Tap a clip or the pause control to pause/resume (`space`)
-- Toggle sound (`m`)
+- Toggle sound (`m`) — mute preference stays when you change tabs
 - Like a clip — counts persist in `localStorage` on this device
 
 ## Catalogs
 
-Each feed has **200** slots. Tijolos streams Commons + Archive brickfilms. Celular streams only short Wikimedia Commons clips (the same CDN as the working LEGO tab). Hundreds of MP4s are **not** committed here.
+Each feed has **200** slots. Tijolos streams Commons + Archive brickfilms. Celular and Produtos stream only short Wikimedia Commons clips on `upload.wikimedia.org` (the CDN that already plays on phones). Hundreds of MP4s are **not** committed here.
 
 | Feed | Items | Unique remote files | Notes |
 | --- | ---: | ---: | --- |
 | Tijolos | 200 | 200 | Brickfilms + Commons LEGO clips |
 | Celular | 200 | 15 | Short Commons factory/repair clips; 185 honest reprises |
+| Produtos | 200 | 38 | Commons unbox / launch / CES-style demos; 162 honest reprises |
 
 See [CATALOG.md](CATALOG.md) for sources and the rotation rule.
 
 The scroller virtualizes players: only the current clip and two neighbours mount a `<video>`.
 
-A few cropped demo MP4s remain in `/public/videos` for offline checks. The live feeds use remote URLs in `src/data/lego.ts` and `src/data/celular.ts`.
+A few cropped demo MP4s remain in `/public/videos` for offline checks. The live feeds use remote URLs in `src/data/lego.ts`, `src/data/celular.ts`, and `src/data/tech.ts`.
 
 ## Stack
 

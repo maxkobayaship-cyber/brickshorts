@@ -6,6 +6,7 @@ import type { FeedCategory } from "@/types/short";
 const OPTIONS: { id: FeedCategory; label: string }[] = [
   { id: "lego", label: "Tijolos" },
   { id: "celular", label: "Celular" },
+  { id: "tech", label: "Produtos" },
 ];
 
 type CategorySwitchProps = {
@@ -32,7 +33,7 @@ export function CategorySwitch({ value, onChange }: CategorySwitchProps) {
             data-testid={`category-${option.id}`}
             onClick={() => onChange(option.id)}
             className={cn(
-              "rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors",
+              "rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors sm:px-3 sm:text-[11px] sm:tracking-[0.12em]",
               active
                 ? "bg-amber-300 text-[#1a1208]"
                 : "text-white/80 hover:text-white",

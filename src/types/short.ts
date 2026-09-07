@@ -1,4 +1,4 @@
-export type FeedCategory = "lego" | "celular";
+export type FeedCategory = "lego" | "celular" | "tech";
 
 export type BrickShort = {
   id: string;

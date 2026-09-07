@@ -1,6 +1,6 @@
 # Catalog notes
 
-MaxShorts now has two swipe feeds of **200 items each**. Clips stream from remote CC/public URLs. This repo does **not** commit hundreds of MP4s.
+MaxShorts has three swipe feeds of **200 items each**. Clips stream from remote CC/public URLs. This repo does **not** commit hundreds of MP4s.
 
 ## Counts
 
@@ -8,8 +8,9 @@ MaxShorts now has two swipe feeds of **200 items each**. Clips stream from remot
 | --- | ---: | ---: | ---: |
 | Tijolos (`lego`) | 200 | 200 | 0 |
 | Celular (`celular`) | 200 | 15 | 185 |
+| Produtos (`tech`) | 200 | 38 | 162 |
 
-Reprises keep the same `src` and add `· reprise N` on the caption plus a distinct `id` (`…-r1`). The counter shows “15 únicos” on the Celular feed.
+Reprises keep the same `src` and add `· reprise N` on the caption plus a distinct `id` (`…-r1`). The counter shows “15 únicos” / “38 únicos” when a feed rotates.
 
 ## Tijolos sources
 
@@ -30,6 +31,14 @@ Celular now uses only **short Wikimedia Commons** clips on `upload.wikimedia.org
 
 Large originals are swapped for Commons **360p/240p** transcodes (a few MB). There are **15** unique playable files; the other 185 slots are honest reprises. Internet Archive dumps are no longer in this feed.
 
+## Produtos sources
+
+New-tech launches, gadget unboxings, CES/IFA-style demos, phones/laptops/wearables/consoles shown as products. Same rule as Celular: **only `upload.wikimedia.org`**, never Archive.org service dumps.
+
+Public Commons footage of real product launches is scarce (lots of game trailers, accessory SKUs, and wiki “gadgets”). After filtering and HEAD/Range checks, **38** unique 240p WebM transcodes play; the other 162 slots are honest reprises. First clips are small and phone-friendly (Echo Dot, OnePlus launch teaser, Switch 2 turntable, ThinkPad 360, Pixel 8 unbox).
+
+Not reused from the Celular tab (Gigaset line, phone repairer, Panzerglas, PinePhone quickstart).
+
 ## Playback
 
-`<video src>` points at `upload.wikimedia.org`. No YouTube API. The feed only mounts a ±2 window of players so 200 remote files do not all load at once.
+`<video src>` for Celular and Produtos points at `upload.wikimedia.org`. No YouTube API. The feed only mounts a ±2 window of players so 200 remote files do not all load at once. Mute stays put when you switch tabs.

@@ -13,9 +13,9 @@ const fredoka = Fredoka({
 });
 
 export const metadata: Metadata = {
-  title: "MaxShorts — tijolos e celular",
+  title: "MaxShorts — tijolos, celular e produtos",
   description:
-    "MaxShorts: dois feeds verticais de construções de tijolo e montagem de telemóvel. Estilo Shorts, sem conta.",
+    "MaxShorts: três feeds verticais de tijolos, montagem de telemóvel e lançamentos de gadgets. Estilo Shorts, sem conta.",
   applicationName: "MaxShorts",
 };
 

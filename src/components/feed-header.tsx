@@ -9,6 +9,7 @@ type FeedHeaderProps = {
 const COPY: Record<FeedCategory, { title: string; subtitle: string }> = {
   lego: { title: "MaxShorts", subtitle: "clips de tijolos" },
   celular: { title: "MaxShorts", subtitle: "montando celular" },
+  tech: { title: "MaxShorts", subtitle: "lançamentos tech" },
 };
 
 export function FeedHeader({ category, onCategoryChange }: FeedHeaderProps) {
