@@ -5,7 +5,7 @@ const UNIQUE: BrickShort[] = [
     id: "gigaset-smart-back",
     src: "https://upload.wikimedia.org/wikipedia/commons/b/b4/Gigaset_Smartphone_Production_III_-_Screwing_the_back_of_the_Smart_Phones.webm",
     creator: "oficina.00",
-    caption: "Parafusos na tampa. Linha Gigaset a fechar o telemóvel.",
+    caption: "Parafusos na tampa. Linha Gigaset fechando o celular.",
     likes: 4200,
     tag: "Linha",
     credit: "Kathinka Engels / Inke Pickhardt",
@@ -17,7 +17,7 @@ const UNIQUE: BrickShort[] = [
     id: "gigaset-smart-board",
     src: "https://upload.wikimedia.org/wikipedia/commons/6/65/Gigaset_Smartphone_Production_II_Connecting_the_Mainboard_and_the_Microphone.webm",
     creator: "oficina.01",
-    caption: "Placa e microfone no sítio. Isto é montar o telefone.",
+    caption: "Placa e microfone no lugar. Isso é montar o telefone.",
     likes: 4373,
     tag: "Linha",
     credit: "Kathinka Engels / Inke Pickhardt",
@@ -29,7 +29,7 @@ const UNIQUE: BrickShort[] = [
     id: "gigaset-smart-qa",
     src: "https://upload.wikimedia.org/wikipedia/commons/a/af/Gigaset_Smartphone_Production_IV_Quality_Inspection.webm",
     creator: "oficina.02",
-    caption: "Controlo de qualidade no fim da linha. Cada ecrã conta.",
+    caption: "Controle de qualidade no fim da linha. Cada tela conta.",
     likes: 4546,
     tag: "Linha",
     credit: "Kathinka Engels / Inke Pickhardt",
@@ -41,7 +41,7 @@ const UNIQUE: BrickShort[] = [
     id: "gigaset-smart-label",
     src: "https://upload.wikimedia.org/wikipedia/commons/e/ed/Gigaset_Smartphone_Production_V_Attaching_the_Label.webm",
     creator: "oficina.03",
-    caption: "Etiqueta, caixa, vai para a rua. O telemóvel saiu da fábrica.",
+    caption: "Etiqueta, caixa, vai para a rua. O celular saiu da fábrica.",
     likes: 4719,
     tag: "Linha",
     credit: "Kathinka Engels / Inke Pickhardt",
@@ -53,7 +53,7 @@ const UNIQUE: BrickShort[] = [
     id: "repairer-1",
     src: "https://upload.wikimedia.org/wikipedia/commons/3/34/A_phone_repairer_1_VP8.webm",
     creator: "oficina.04",
-    caption: "Bancada aberta: ecrã, ferramentas, ritmo de oficina.",
+    caption: "Bancada aberta: tela, ferramentas, ritmo de oficina.",
     likes: 4892,
     tag: "Oficina",
     credit: "Oreoluwa Adetimehin",
@@ -64,7 +64,7 @@ const UNIQUE: BrickShort[] = [
     id: "repairer-2",
     src: "https://upload.wikimedia.org/wikipedia/commons/a/af/A_phone_repairer_VP8.webm",
     creator: "oficina.05",
-    caption: "Ainda na oficina. Desmontar e voltar a fechar.",
+    caption: "Ainda na oficina. Desmontar e fechar de novo.",
     likes: 5065,
     tag: "Oficina",
     credit: "Oreoluwa Adetimehin",
@@ -87,7 +87,7 @@ const UNIQUE: BrickShort[] = [
     id: "panzerglas",
     src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/2a/Handy_Panzerglas_Anbringen_Anleitung_%E2%80%93_Wie_Schutzfolie_auf_Iphone%2C_Samsung_%26_Huawei_Aufkleben.webm/Handy_Panzerglas_Anbringen_Anleitung_%E2%80%93_Wie_Schutzfolie_auf_Iphone%2C_Samsung_%26_Huawei_Aufkleben.webm.240p.vp9.webm",
     creator: "oficina.07",
-    caption: "Película no ecrã. O passo que toda a gente falha.",
+    caption: "Película na tela. O passo que todo mundo falha.",
     likes: 5411,
     tag: "Oficina",
     credit: "ProblemLöserTV",
@@ -99,7 +99,7 @@ const UNIQUE: BrickShort[] = [
     id: "pinephone",
     src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/13/PinePhone_Beta_Edition_Quickstart_Guide.webm/PinePhone_Beta_Edition_Quickstart_Guide.webm.360p.vp9.webm",
     creator: "oficina.08",
-    caption: "PinePhone na caixa: o telemóvel que se pode abrir.",
+    caption: "PinePhone na caixa: o celular que dá pra abrir.",
     likes: 5584,
     tag: "Montagem",
     credit: "PizzaLovingNerd",
@@ -111,7 +111,7 @@ const UNIQUE: BrickShort[] = [
     id: "apple-lenses",
     src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0d/ANIMACI%C3%93N_3D_DE_LAS_LENTES_DE_UN_TEL%C3%89FONO_MARCA_APPLE.webm/ANIMACI%C3%93N_3D_DE_LAS_LENTES_DE_UN_TEL%C3%89FONO_MARCA_APPLE.webm.360p.vp9.webm",
     creator: "oficina.09",
-    caption: "Lentes do iPhone em 3D. A câmara por dentro.",
+    caption: "Lentes do iPhone em 3D. A câmera por dentro.",
     likes: 5757,
     tag: "Peças",
     credit: "Miguel.Angel.HMA",
@@ -123,7 +123,7 @@ const UNIQUE: BrickShort[] = [
     id: "gigaset-smd",
     src: "https://upload.wikimedia.org/wikipedia/commons/3/34/Gigaset_Cordless_Telephone_Production_V_ASM_Siplace_SMD_Production_Line.webm",
     creator: "oficina.10",
-    caption: "Linha SMD: componentes a cair na placa.",
+    caption: "Linha SMD: componentes caindo na placa.",
     likes: 5930,
     tag: "Linha",
     credit: "Kathinka Engels / Inke Pickhardt",
@@ -135,7 +135,7 @@ const UNIQUE: BrickShort[] = [
     id: "gigaset-mould-1",
     src: "https://upload.wikimedia.org/wikipedia/commons/8/81/Gigaset_Cordless_Telephone_Production_III_-_Engel_%E2%80%9CIn_Mould_Decoration%E2%80%9D_Part_I.webm",
     creator: "oficina.11",
-    caption: "Carcaça a nascer no molde. Depois vem o interior.",
+    caption: "Carcaça nascendo no molde. Depois vem o interior.",
     likes: 6103,
     tag: "Linha",
     credit: "Kathinka Engels / Inke Pickhardt",
@@ -159,7 +159,7 @@ const UNIQUE: BrickShort[] = [
     id: "gigaset-inject",
     src: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Gigaset_Cordless_Telephone_Production_II_-_Engel_Injection_Moulding_Machine.webm",
     creator: "oficina.13",
-    caption: "Injecção da carcaça. Sem isto não há telemóvel.",
+    caption: "Injeção da carcaça. Sem isso não há celular.",
     likes: 6449,
     tag: "Linha",
     credit: "Kathinka Engels / Inke Pickhardt",
@@ -171,7 +171,7 @@ const UNIQUE: BrickShort[] = [
     id: "gigaset-conveyor",
     src: "https://upload.wikimedia.org/wikipedia/commons/3/36/Gigaset_Cordless_Telephone_Production_VII_-_Pneumatic_Conveyor_Belt.webm",
     creator: "oficina.14",
-    caption: "Tapete pneumático. A linha não pára.",
+    caption: "Esteira pneumática. A linha não para.",
     likes: 6622,
     tag: "Linha",
     credit: "Kathinka Engels / Inke Pickhardt",
@@ -181,24 +181,5 @@ const UNIQUE: BrickShort[] = [
   },
 ];
 
-function fillTo(target: number): BrickShort[] {
-  if (UNIQUE.length >= target) return UNIQUE.slice(0, target);
-  const out = [...UNIQUE];
-  let reprise = 1;
-  while (out.length < target) {
-    const src = UNIQUE[(out.length - UNIQUE.length) % UNIQUE.length];
-    out.push({
-      ...src,
-      id: `${src.id}-r${reprise}`,
-      caption: `${src.caption} · reprise ${reprise}`,
-      likes: Math.max(900, src.likes - reprise * 21),
-    });
-    if ((out.length - UNIQUE.length) % UNIQUE.length === 0) {
-      reprise += 1;
-    }
-  }
-  return out;
-}
-
-export const CELULAR_SHORTS: BrickShort[] = fillTo(200);
+export const CELULAR_SHORTS: BrickShort[] = UNIQUE;
 export const CELULAR_UNIQUE_COUNT = UNIQUE.length;
