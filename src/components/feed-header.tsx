@@ -1,31 +1,42 @@
+"use client";
+
+import { Volume2 } from "lucide-react";
 import { CategorySwitch } from "@/components/category-switch";
+import { copy } from "@/copy/pt-BR";
 import type { FeedCategory } from "@/types/short";
 
 type FeedHeaderProps = {
   category: FeedCategory;
   onCategoryChange: (next: FeedCategory) => void;
+  muted: boolean;
+  onMute: () => void;
 };
 
-const COPY: Record<FeedCategory, { title: string; subtitle: string }> = {
-  lego: { title: "MaxShorts", subtitle: "clips de tijolos" },
-  celular: { title: "MaxShorts", subtitle: "montando celular" },
-  tech: { title: "MaxShorts", subtitle: "lançamentos tech" },
-};
-
-export function FeedHeader({ category, onCategoryChange }: FeedHeaderProps) {
-  const copy = COPY[category];
-
+export function FeedHeader({ category, onCategoryChange, muted, onMute }: FeedHeaderProps) {
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-start justify-between gap-3 px-4 pt-[max(0.9rem,env(safe-area-inset-top))]">
-      <div className="flex items-center gap-2.5">
+      <div className="flex min-w-0 items-center gap-2.5">
         <StudMark />
-        <div className="leading-tight">
+        <div className="min-w-0 leading-tight">
           <p className="font-heading text-[1.35rem] font-semibold tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.65)]">
-            {copy.title}
+            {copy.appName}
           </p>
           <p className="text-[11px] font-medium tracking-wide text-white/75">
-            {copy.subtitle}
+            {copy.subtitles[category]}
           </p>
+          {!muted ? (
+            <button
+              type="button"
+              data-testid="sound-on-badge"
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={onMute}
+              aria-label={copy.disableSound}
+              className="pointer-events-auto mt-1 inline-flex min-h-12 items-center gap-1.5 rounded-full bg-amber-300 px-3 text-[11px] font-semibold text-[#1a1208]"
+            >
+              <Volume2 className="size-3.5" />
+              {copy.soundOn}
+            </button>
+          ) : null}
         </div>
       </div>
       <CategorySwitch value={category} onChange={onCategoryChange} />

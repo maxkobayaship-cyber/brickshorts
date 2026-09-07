@@ -1,4 +1,5 @@
 import { Boxes } from "lucide-react";
+import { copy } from "@/copy/pt-BR";
 
 export function EmptyFeed() {
   return (
@@ -7,9 +8,9 @@ export function EmptyFeed() {
         <Boxes className="size-8 text-amber-300" />
       </span>
       <div className="space-y-2">
-        <h2 className="font-heading text-2xl font-semibold">Nenhum clipe por aqui</h2>
+        <h2 className="font-heading text-2xl font-semibold">{copy.emptyTitle}</h2>
         <p className="max-w-[16rem] text-sm leading-relaxed text-white/70">
-          O feed ainda está vazio. Volta mais tarde — ou abre outro saco de peças.
+          {copy.emptyBody}
         </p>
       </div>
     </div>

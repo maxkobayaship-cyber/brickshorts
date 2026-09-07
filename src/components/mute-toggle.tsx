@@ -1,6 +1,7 @@
 "use client";
 
 import { Volume2, VolumeX } from "lucide-react";
+import { copy } from "@/copy/pt-BR";
 
 type MuteToggleProps = {
   muted: boolean;
@@ -16,7 +17,7 @@ export function MuteToggle({ muted, onToggle }: MuteToggleProps) {
       onPointerDown={(event) => event.stopPropagation()}
       onClick={onToggle}
       aria-pressed={!muted}
-      aria-label={muted ? "Ativar som" : "Desativar som"}
+      aria-label={muted ? copy.enableSound : copy.disableSound}
       className="flex flex-col items-center gap-1 text-white"
     >
       <span
@@ -29,7 +30,7 @@ export function MuteToggle({ muted, onToggle }: MuteToggleProps) {
         {muted ? <VolumeX className="size-6 drop-shadow-md" /> : <Volume2 className="size-6" />}
       </span>
       <span className="text-[11px] font-semibold drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
-        {muted ? "Mudo" : "Som"}
+        {muted ? copy.mute : copy.sound}
       </span>
     </button>
   );

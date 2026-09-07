@@ -1,6 +1,7 @@
 "use client";
 
 import { Heart } from "lucide-react";
+import { copy } from "@/copy/pt-BR";
 import { formatCount } from "@/lib/likes";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +18,7 @@ export function LikeButton({ liked, count, onToggle }: LikeButtonProps) {
       data-testid="like-button"
       onClick={onToggle}
       aria-pressed={liked}
-      aria-label={liked ? "Remover gosto" : "Gostar do clipe"}
+      aria-label={liked ? copy.unlike : copy.like}
       className="group flex flex-col items-center gap-1 text-white"
     >
       <span
