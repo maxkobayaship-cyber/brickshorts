@@ -1,17 +1,24 @@
 "use client";
 
-import { RotateCcw } from "lucide-react";
+import { ChevronDown, Loader2, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { applyVideoMute, playActiveClip, silenceClip } from "@/lib/audio";
-import type { BrickShort } from "@/types/short";
+import { copy } from "@/copy/pt-BR";
+import { applyVideoMute, detachClip, playActiveClip, silenceClip } from "@/lib/audio";
+import type { BrickShort, ClipPhase } from "@/types/short";
+
+const LOAD_TIMEOUT_MS = 8000;
 
 type VideoCardProps = {
   short: BrickShort;
   active: boolean;
+  attached: boolean;
   muted: boolean;
   paused: boolean;
+  preload: "auto" | "metadata";
   onTogglePause: () => void;
+  onSkipNext?: () => void;
+  onFailed?: (id: string) => void;
   onVideoElement?: (video: HTMLVideoElement | null) => void;
   showHint?: boolean;
 };
@@ -19,49 +26,85 @@ type VideoCardProps = {
 export function VideoCard({
   short,
   active,
+  attached,
   muted,
   paused,
+  preload,
   onTogglePause,
+  onSkipNext,
+  onFailed,
   onVideoElement,
   showHint = false,
 }: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointerStart = useRef<{ x: number; y: number } | null>(null);
   const retriesRef = useRef(0);
-  const [failed, setFailed] = useState(false);
+  const failedNotified = useRef(false);
+  const phaseRef = useRef<ClipPhase>(attached ? "loading" : "idle");
+  const [phase, setPhase] = useState<ClipPhase>(attached ? "loading" : "idle");
+  const [posterOk, setPosterOk] = useState(Boolean(short.poster));
 
-  useEffect(() => {
-    retriesRef.current = 0;
-    setFailed(false);
-  }, [short.src]);
+  function assignPhase(next: ClipPhase) {
+    phaseRef.current = next;
+    setPhase(next);
+  }
+
+  function captureFrame() {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas || video.readyState < 2 || video.videoWidth < 2) return;
+    try {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+    } catch {
+      // Cross-origin streams may taint the canvas; keep the last good frame.
+    }
+  }
 
   useEffect(() => {
     const video = videoRef.current;
-    onVideoElement?.(active ? video : null);
+    onVideoElement?.(active && attached ? video : null);
     return () => {
       if (active) onVideoElement?.(null);
     };
-  }, [active, onVideoElement, short.id]);
+  }, [active, attached, onVideoElement, short.id]);
 
   useEffect(() => {
     const video = videoRef.current;
+    if (!attached) {
+      detachClip(video);
+      return;
+    }
     if (!video) return;
 
     if (!active) {
+      captureFrame();
       silenceClip(video);
       return;
     }
 
-    if (failed) return;
+    if (phaseRef.current === "error") return;
 
     if (paused) {
       applyVideoMute(video, true);
       video.pause();
+      captureFrame();
       return;
     }
 
     playActiveClip(video, muted);
-  }, [active, failed, muted, paused, short.src]);
+  }, [active, attached, muted, paused, phase, short.src]);
+
+  useEffect(() => {
+    if (!active || !attached || phase !== "loading") return;
+    const timeout = window.setTimeout(() => {
+      assignPhase("error");
+    }, LOAD_TIMEOUT_MS);
+    return () => window.clearTimeout(timeout);
+  }, [active, attached, phase, short.src]);
 
   function onPointerDown(event: React.PointerEvent<HTMLElement>) {
     pointerStart.current = { x: event.clientX, y: event.clientY };
@@ -70,15 +113,22 @@ export function VideoCard({
   function onPointerUp(event: React.PointerEvent<HTMLElement>) {
     const start = pointerStart.current;
     pointerStart.current = null;
-    if (!start) return;
+    if (!start || phase === "error") return;
     const moved = Math.hypot(event.clientX - start.x, event.clientY - start.y);
     if (moved > 12) return;
     onTogglePause();
   }
 
+  function markReady() {
+    assignPhase("playing");
+    captureFrame();
+  }
+
   function retry() {
     const video = videoRef.current;
-    setFailed(false);
+    retriesRef.current = 0;
+    failedNotified.current = false;
+    assignPhase("loading");
     if (!video) return;
     video.load();
     if (active && !paused) {
@@ -86,26 +136,62 @@ export function VideoCard({
     }
   }
 
+  const showLoading = attached && phase === "loading";
+  const poster = short.poster;
+
   return (
     <article
-      className="relative h-full w-full overflow-hidden bg-black"
+      className="relative h-full w-full overflow-hidden bg-[#1a1208]"
       data-active={active ? "true" : "false"}
       data-audio={active && !muted ? "on" : "off"}
+      data-phase={phase}
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
     >
-      {!failed ? (
+      {poster && posterOk ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={poster}
+          alt=""
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          onError={() => setPosterOk(false)}
+        />
+      ) : null}
+
+      <canvas
+        ref={canvasRef}
+        aria-hidden
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      />
+
+      {attached ? (
         <video
           ref={videoRef}
           className="pointer-events-none absolute inset-0 h-full w-full object-cover"
           src={short.src}
+          poster={poster}
           playsInline
           loop
           muted
-          preload={active ? "auto" : "none"}
-          onCanPlay={() => {
+          preload={preload}
+          onLoadStart={() => {
+            if (phaseRef.current !== "error") assignPhase("loading");
+          }}
+          onWaiting={() => {
+            if (phaseRef.current !== "error") assignPhase("loading");
+          }}
+          onPlaying={() => {
+            if (phaseRef.current === "error") return;
+            markReady();
             const video = videoRef.current;
-            if (!video || !active || paused || failed) return;
+            if (!video || !active || paused) return;
+            playActiveClip(video, muted);
+          }}
+          onCanPlay={() => {
+            if (phaseRef.current === "error") return;
+            markReady();
+            const video = videoRef.current;
+            if (!video || !active || paused) return;
             playActiveClip(video, muted);
           }}
           onError={() => {
@@ -115,42 +201,73 @@ export function VideoCard({
               video.load();
               return;
             }
-            setFailed(true);
+            assignPhase("error");
+            if (!failedNotified.current) {
+              failedNotified.current = true;
+              onFailed?.(short.id);
+            }
           }}
           aria-label={`Clipe de @${short.creator}`}
         />
-      ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#1a1208] px-8 text-center">
-          <div className="space-y-2 text-white">
-            <p className="font-heading text-xl font-semibold">Este clipe não carregou</p>
-            <p className="text-sm text-white/70">
-              A peça caiu da mesa. Tenta outra vez ou desliza para o próximo.
-            </p>
-          </div>
-          <Button
-            variant="secondary"
-            onPointerDown={(event) => event.stopPropagation()}
-            onClick={retry}
-            className="bg-amber-300 text-[#1a1208] hover:bg-amber-200"
-          >
-            <RotateCcw data-icon="inline-start" />
-            Tentar de novo
-          </Button>
+      ) : null}
+
+      {showLoading ? (
+        <div className="absolute inset-0 z-[5] flex items-center justify-center bg-black/35">
+          <p className="inline-flex items-center gap-2 rounded-full bg-black/55 px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/15 backdrop-blur-md">
+            <Loader2 className="size-4 animate-spin" aria-hidden />
+            {copy.loading}
+          </p>
         </div>
-      )}
+      ) : null}
+
+      {phase === "error" ? (
+        <div className="absolute inset-0 z-[5] flex flex-col items-center justify-center gap-4 bg-[#1a1208]/80 px-8 text-center">
+          <div className="space-y-2 text-white">
+            <p className="font-heading text-xl font-semibold">{copy.unavailableTitle}</p>
+            <p className="text-sm text-white/70">{copy.unavailableBody}</p>
+          </div>
+          <div className="flex flex-col items-stretch gap-2 sm:flex-row">
+            {onSkipNext ? (
+              <Button
+                variant="secondary"
+                onPointerDown={(event) => event.stopPropagation()}
+                onClick={onSkipNext}
+                className="min-h-12 min-w-12 bg-amber-300 px-4 text-[#1a1208] hover:bg-amber-200"
+              >
+                <ChevronDown data-icon="inline-start" />
+                {copy.skip}
+              </Button>
+            ) : null}
+            <Button
+              variant="outline"
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={retry}
+              className="min-h-12 min-w-12 border-white/25 bg-black/35 px-4 text-white hover:bg-white/10"
+            >
+              <RotateCcw data-icon="inline-start" />
+              {copy.retry}
+            </Button>
+          </div>
+        </div>
+      ) : null}
 
       <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/45 via-transparent to-black/70" />
 
-      {paused && active && !failed ? (
+      {paused && active && phase === "playing" ? (
         <p className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/45 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md">
-          Pausado
+          {copy.paused}
         </p>
       ) : null}
 
-      {showHint && active ? (
-        <p className="pointer-events-none absolute top-[22%] left-1/2 -translate-x-1/2 rounded-full bg-black/35 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-white/90 ring-1 ring-white/10 backdrop-blur-md">
-          Desliza para o próximo
-        </p>
+      {showHint && active && phase !== "error" ? (
+        <>
+          <p className="pointer-events-none absolute top-[22%] left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/35 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-white/90 ring-1 ring-white/10 backdrop-blur-md md:hidden">
+            {copy.hintMobile}
+          </p>
+          <p className="pointer-events-none absolute top-[22%] left-1/2 z-10 hidden max-w-[22rem] -translate-x-1/2 rounded-full bg-black/35 px-3 py-1.5 text-center text-[11px] font-semibold tracking-wide text-white/90 ring-1 ring-white/10 backdrop-blur-md md:block">
+            {copy.hintDesktop}
+          </p>
+        </>
       ) : null}
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pr-20">
