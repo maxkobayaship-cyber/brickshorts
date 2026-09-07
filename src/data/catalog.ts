@@ -1,12 +1,13 @@
 import { CELULAR_SHORTS } from "@/data/celular";
 import { LEGO_SHORTS } from "@/data/lego";
 import { TECH_SHORTS } from "@/data/tech";
-import { withPlaybackMedia } from "@/lib/media";
+import { isArchiveHotlink, withPlaybackMedia } from "@/lib/media";
 import { uniqueByClip } from "@/lib/shuffle";
 import type { BrickShort, FeedCategory } from "@/types/short";
 
 function prepare(items: BrickShort[], compact: boolean): BrickShort[] {
-  return uniqueByClip(items.map((item) => withPlaybackMedia(item, compact)));
+  const cleaned = compact ? items.filter((item) => !isArchiveHotlink(item.src)) : items;
+  return uniqueByClip(cleaned.map((item) => withPlaybackMedia(item, compact)));
 }
 
 export const FEEDS: Record<FeedCategory, BrickShort[]> = {

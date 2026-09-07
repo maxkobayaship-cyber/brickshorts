@@ -30,7 +30,7 @@ On a phone the feed is full-screen. On desktop it sits in a phone-width frame, w
 
 Feeds are **deduped** by clip `id` / normalized `src` (and caption+@). The counter is `atual/total` after that unique list. Each tab visit shuffles the start.
 
-Celular and Produtos stream compact Wikimedia Commons clips on `upload.wikimedia.org` (240p VP9, typically well under 3 MB). Commons H.264 `360p.mpeg4.mov` transcodes are often far larger than 3 MB, so we keep the phone-friendly 240p files. Tijolos streams Commons + Archive brickfilms.
+Celular and Produtos stream from light Wikimedia (`upload.wikimedia.org`): H.264 MP4/MOV ≤720p and ≤3 MB when Commons actually has a small transcode, otherwise 240p VP9. They never hotlink Archive.org. Bunny Stream / Cloudflare Stream can replace that later (HLS + poster) without blocking this release. Tijolos still mixes Commons + Archive brickfilms.
 
 | Feed | Unique clips | Notes |
 | --- | ---: | --- |
